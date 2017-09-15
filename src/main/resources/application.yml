@@ -8,3 +8,9 @@ spring:
     thymeleaf:
        cache: false
        mode: LEGACYHTML5
+    cache:
+      type: hazelcast
+    hazelcast:
+      config: hazelcast.xml
+server:
+  port: 8081

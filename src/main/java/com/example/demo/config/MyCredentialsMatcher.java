@@ -4,9 +4,13 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
+import org.apache.shiro.codec.Hex;
+import org.apache.shiro.crypto.AesCipherService;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.util.ByteSource;
+
+import java.security.Key;
 
 /**
  * @auther Administrator
@@ -26,8 +30,8 @@ public class MyCredentialsMatcher extends SimpleCredentialsMatcher {
     }
 
     public static void main(String[] args) {
-//        Md5Hash hash = new Md5Hash("123456","admin@8d78869f470951332959580424d4bf4f");
-//        System.out.println(hash.toHex());
+        Md5Hash hash = new Md5Hash("123456","admin@8d78869f470951332959580424d4bf4f");
+        System.out.println(hash.toHex());
         SecureRandomNumberGenerator generator = new SecureRandomNumberGenerator();
         final ByteSource byteSource = generator.nextBytes();
         final String s = byteSource.toString();

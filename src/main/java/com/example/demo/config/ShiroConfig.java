@@ -5,9 +5,14 @@ import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.hazelcast.cache.HazelcastCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,20 +39,33 @@ public class ShiroConfig {
         return myShiroRealm;
     }
 
-
     @Bean
     public CacheManager cacheManager(){
-        return new MemoryConstrainedCacheManager();
+        return new HazelcastCacheManager();
     }
 
     @Bean
-    public SecurityManager securityManager(CacheManager cacheManager) {
+    public SessionDAO sessionDAO(CacheManager cacheManager){
+        final EnterpriseCacheSessionDAO sessionDAO = new EnterpriseCacheSessionDAO();
+        sessionDAO.setCacheManager(cacheManager);
+        return sessionDAO;
+    }
+
+    @Bean
+    public SessionManager sessionManager(SessionDAO sessionDAO){
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        sessionManager.setSessionDAO(sessionDAO);
+        return sessionManager;
+    }
+
+    @Bean
+    public SecurityManager securityManager(CacheManager cacheManager,SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(myShiroRealm());
         securityManager.setCacheManager(cacheManager);
+        securityManager.setSessionManager(sessionManager);
         return securityManager;
     }
-
 
     @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
@@ -59,6 +77,7 @@ public class ShiroConfig {
 
         // 配置不会被拦截的链接 顺序判断
         filterChainDefinitionMap.put("/static/**", "anon");
+        filterChainDefinitionMap.put("/mancenter/**", "anon");
         // 配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
         filterChainDefinitionMap.put("/userAdd", "perms[userInfo:add]");
