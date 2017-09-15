@@ -1,8 +1,5 @@
 package com.example.demo.config;
 
-import com.example.demo.entity.SysPermission;
-import com.example.demo.entity.SysRole;
-import com.example.demo.entity.UserInfo;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.Common;
@@ -37,8 +34,8 @@ public class MyShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         LOGGER.info("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        UserInfo userInfo  = (UserInfo)principals.getPrimaryPrincipal();
-        final Integer id = userInfo.getId();
+        final Map<String,Object> map = (Map<String,Object>) principals.getPrimaryPrincipal();
+        final Integer id = Common.getMapInteger(map,"id");
         // 查询用户角色
         final List<Map<String, Object>> roles = userInfoService.findRolesById(id);
         for(Map<String, Object> role:roles){

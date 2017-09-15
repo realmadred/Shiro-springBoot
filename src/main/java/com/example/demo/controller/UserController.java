@@ -5,7 +5,6 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Map;
@@ -34,7 +33,7 @@ public class UserController extends BaseController {
         LOGGER.info("login...");
         // 登录失败从request中获取shiro处理的异常信息。
         String exception = (String) request.getAttribute(SHIRO_LOGIN_FAILURE);
-        LOGGER.error("exception={}", exception);
+        LOGGER.info("exception={}", exception);
         String msg = "";
         if (exception != null) {
             if (UnknownAccountException.class.getName().equals(exception)) {
