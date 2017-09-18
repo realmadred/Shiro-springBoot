@@ -1,5 +1,8 @@
 package com.example.demo.config;
 
+import com.example.demo.service.PermissionService;
+import com.example.demo.util.Common;
+import com.example.demo.util.Constant;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
@@ -9,16 +12,23 @@ import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.util.CollectionUtils;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 @Configuration
 public class ShiroConfig {
+
+    @Resource
+    private PermissionService permissionService;
 
 //    @Bean
 //    public CredentialsMatcher myMatcher(){
@@ -75,14 +85,26 @@ public class ShiroConfig {
 
         // 配置不会被拦截的链接 顺序判断
         filterChainDefinitionMap.put("/static/**", "anon");
-        filterChainDefinitionMap.put("/mancenter/**", "anon");
         // 配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
-        filterChainDefinitionMap.put("/userAdd", "perms[userInfo:add]");
-        filterChainDefinitionMap.put("/userDel", "perms[userInfo:del]");
-        //<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
-        //<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
+
+        final List<Map<String, Object>> maps = permissionService.findAll();
+        if (!CollectionUtils.isEmpty(maps)){
+            maps.forEach(map ->{
+                final String permission = Common.getMapString(map, "permission");
+                final String url = Common.getMapString(map, "url");
+                if (!Common.hasEmpty(permission,url)){
+                    filterChainDefinitionMap.put("/"+url,new StringJoiner("")
+                            .add(Constant.PERMS_STR)
+                            .add(Constant.SECTION_PREFIX)
+                            .add(permission).add(Constant.SECTION_SUFFIX).toString());
+                }
+            });
+        }
+
+        //放在最后
         filterChainDefinitionMap.put("/**", "authc");
+
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面

@@ -34,8 +34,7 @@ public class MyShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         LOGGER.info("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        final Map<String,Object> map = (Map<String,Object>) principals.getPrimaryPrincipal();
-        final Integer id = Common.getMapInteger(map,"id");
+        final Integer id = (Integer) principals.getPrimaryPrincipal();
         // 查询用户角色
         final List<Map<String, Object>> roles = userInfoService.findRolesById(id);
         for(Map<String, Object> role:roles){
@@ -66,7 +65,7 @@ public class MyShiroRealm extends AuthorizingRealm {
             return null;
         }
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                userInfo, //用户名
+                Common.getMapInteger(userInfo,"id"), //用户名
                 Common.getMapString(userInfo,"password"), //密码
                 ByteSource.Util.bytes(username+"@"+Common.getMapString(userInfo,"salt")),//salt=username@salt
                 getName()  //realm name

@@ -1,6 +1,7 @@
 package com.example.demo.util;
 
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -110,6 +111,36 @@ public class Common {
 	 */
 	public static boolean isEmpty(Object obj){
 		return StringUtils.isBlank(toString(obj));
+	}
+
+	/**
+	 * 判读是否存在为空对象
+	 * lf
+	 * 2017-9-18 16:41:28
+	 * @param objs
+	 * @return
+	 */
+	public static boolean hasEmptyObj(Object... objs){
+		if (ArrayUtils.isEmpty(objs)) return true;
+		for (final Object obj : objs) {
+			if (isEmpty(obj)) return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 判读是否存在为空字符串
+	 * lf
+	 * 2017-9-18 16:41:28
+	 * @param strs
+	 * @return
+	 */
+	public static boolean hasEmpty(String... strs){
+		if (ArrayUtils.isEmpty(strs)) return true;
+		for (final String str : strs) {
+			if (StringUtils.isBlank(str)) return true;
+		}
+		return false;
 	}
 
 	/**

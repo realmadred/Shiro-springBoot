@@ -2,6 +2,7 @@ package com.example.demo;
 
 import org.apache.shiro.codec.Hex;
 import org.apache.shiro.crypto.AesCipherService;
+import org.junit.Test;
 
 import java.security.Key;
 
@@ -12,7 +13,8 @@ import java.security.Key;
  */
 public class CipherServiceTest {
 
-    public static void main(String[] args) {
+    @Test
+    public void cipherService(){
         AesCipherService cipherService = new AesCipherService();
         cipherService.setKeySize(128);
 
