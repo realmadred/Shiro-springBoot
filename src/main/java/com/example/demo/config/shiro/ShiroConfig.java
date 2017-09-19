@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.config.shiro;
 
 import com.example.demo.service.PermissionService;
 import com.example.demo.util.Common;

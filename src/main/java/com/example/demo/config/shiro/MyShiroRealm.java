@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.config.shiro;
 
 import com.example.demo.service.RoleService;
 import com.example.demo.service.UserInfoService;
@@ -32,7 +32,7 @@ public class MyShiroRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        LOGGER.info("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");
+        LOGGER.info("doGetAuthorizationInfo");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         final Integer id = (Integer) principals.getPrimaryPrincipal();
         // 查询用户角色
