@@ -1,22 +1,26 @@
 package com.example.demo.config.shiro;
 
+import com.example.demo.config.redis.RedisCacheManager;
 import com.example.demo.service.PermissionService;
 import com.example.demo.util.Common;
 import com.example.demo.util.Constant;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
-import org.apache.shiro.hazelcast.cache.HazelcastCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
+import org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.util.CollectionUtils;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
 import java.util.LinkedHashMap;
@@ -47,15 +51,18 @@ public class ShiroConfig {
         return myShiroRealm;
     }
 
-    @Bean
-    public CacheManager cacheManager(){
-        return new HazelcastCacheManager();
+    @Bean("shiroCacheManager")
+    public CacheManager cacheManager(RedisTemplate<String,Object> template){
+        final RedisCacheManager redisCacheManager = new RedisCacheManager();
+        redisCacheManager.setTemplate(template);
+        return redisCacheManager;
     }
 
     @Bean
-    public SessionDAO sessionDAO(CacheManager cacheManager){
+    public SessionDAO sessionDAO(@Qualifier("shiroCacheManager") CacheManager cacheManager){
         final EnterpriseCacheSessionDAO sessionDAO = new EnterpriseCacheSessionDAO();
         sessionDAO.setCacheManager(cacheManager);
+        sessionDAO.setSessionIdGenerator(new JavaUuidSessionIdGenerator());
         return sessionDAO;
     }
 

@@ -12,9 +12,7 @@ spring:
        cache: false
        mode: LEGACYHTML5
     cache:
-      type: hazelcast
-    hazelcast:
-      config: hazelcast.xml
+      type: redis
 
     redis:
       database: 0
