@@ -10,6 +10,8 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableCaching
@@ -40,16 +42,16 @@ public class RedisConfig extends CachingConfigurerSupport {
     public RedisTemplate<Object,Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<Object,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
-//        RedisSerializer<Object> kryoRedisSerializer = new KryoRedisSerializer<>();
+        RedisSerializer<Object> kryoRedisSerializer = new KryoRedisSerializer<>();
 //        redisTemplate.setKeySerializer(kryoRedisSerializer);
 //        redisTemplate.setValueSerializer(kryoRedisSerializer);
 //        redisTemplate.setHashKeySerializer(kryoRedisSerializer);
 //        redisTemplate.setHashValueSerializer(kryoRedisSerializer);
-        JdkSerializationRedisSerializer serializer = new JdkSerializationRedisSerializer();
-        redisTemplate.setValueSerializer(serializer);
-        redisTemplate.setKeySerializer(serializer);
-        redisTemplate.setHashValueSerializer(serializer);
-        redisTemplate.setHashKeySerializer(serializer);
+        JdkSerializationRedisSerializer valueSerializer = new JdkSerializationRedisSerializer();
+        redisTemplate.setKeySerializer(kryoRedisSerializer);
+        redisTemplate.setHashKeySerializer(kryoRedisSerializer);
+        redisTemplate.setValueSerializer(valueSerializer);
+        redisTemplate.setHashValueSerializer(valueSerializer);
         return redisTemplate;
     }
 
