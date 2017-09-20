@@ -8,6 +8,7 @@ import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.mgt.SessionFactory;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator;
@@ -19,6 +20,7 @@ import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -59,17 +61,24 @@ public class ShiroConfig {
     }
 
     @Bean
+    @Primary
+    public SessionFactory sessionFactory(){
+        return new MySessionFactory();
+    }
+
+    @Bean
     public SessionDAO sessionDAO(@Qualifier("shiroCacheManager") CacheManager cacheManager){
-        final EnterpriseCacheSessionDAO sessionDAO = new EnterpriseCacheSessionDAO();
+        final MySessionDao sessionDAO = new MySessionDao();
         sessionDAO.setCacheManager(cacheManager);
         sessionDAO.setSessionIdGenerator(new JavaUuidSessionIdGenerator());
         return sessionDAO;
     }
 
     @Bean
-    public SessionManager sessionManager(SessionDAO sessionDAO){
+    public SessionManager sessionManager(SessionDAO sessionDAO,SessionFactory sessionFactory){
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setSessionDAO(sessionDAO);
+        sessionManager.setSessionFactory(sessionFactory);
         return sessionManager;
     }
 

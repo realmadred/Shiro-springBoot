@@ -1,5 +1,7 @@
 package com.example.demo.config.redis;
 
+import com.example.demo.serializer.FstRedisSerializer;
+import com.example.demo.serializer.kryo.KryoRedisSerializer;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -9,9 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableCaching
@@ -43,15 +43,11 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisTemplate<Object,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
         RedisSerializer<Object> kryoRedisSerializer = new KryoRedisSerializer<>();
-//        redisTemplate.setKeySerializer(kryoRedisSerializer);
-//        redisTemplate.setValueSerializer(kryoRedisSerializer);
-//        redisTemplate.setHashKeySerializer(kryoRedisSerializer);
-//        redisTemplate.setHashValueSerializer(kryoRedisSerializer);
-        JdkSerializationRedisSerializer valueSerializer = new JdkSerializationRedisSerializer();
+        FstRedisSerializer valueSerializer = new FstRedisSerializer();
         redisTemplate.setKeySerializer(kryoRedisSerializer);
         redisTemplate.setHashKeySerializer(kryoRedisSerializer);
-        redisTemplate.setValueSerializer(valueSerializer);
-        redisTemplate.setHashValueSerializer(valueSerializer);
+        redisTemplate.setValueSerializer(kryoRedisSerializer);
+        redisTemplate.setHashValueSerializer(kryoRedisSerializer);
         return redisTemplate;
     }
 

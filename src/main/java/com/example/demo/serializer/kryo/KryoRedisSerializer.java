@@ -1,11 +1,10 @@
-package com.example.demo.config.redis;
+package com.example.demo.serializer.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.example.demo.config.shiro.MySession;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.shiro.web.util.SavedRequest;
+import org.apache.shiro.session.mgt.SimpleSession;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
@@ -17,21 +16,19 @@ import org.springframework.data.redis.serializer.SerializationException;
  */
 public class KryoRedisSerializer<T> implements RedisSerializer<T> {
 
-    private Kryo kryo = new Kryo();
-    {
-        kryo.register(MySession.class);
-        kryo.register(SavedRequest.class);
-    }
+    private static final KryoFactory DEFAULT_FACTORY = KryoFactory.getDefaultFactory();
 
     @Override
     public byte[] serialize(T t) throws SerializationException {
         Output output = new Output(4096);
+        Kryo kryo = DEFAULT_FACTORY.getKryo();
         try {
             kryo.writeClassAndObject(output, t);
             return output.toBytes();
         } finally {
             output.flush();
             output.close();
+            cleanup(kryo);
         }
     }
 
@@ -39,9 +36,19 @@ public class KryoRedisSerializer<T> implements RedisSerializer<T> {
     public T deserialize(byte[] bytes) throws SerializationException {
         if (ArrayUtils.isEmpty(bytes)) return null;
         Input input = new Input(bytes);
-        @SuppressWarnings("unchecked")
-        T t = (T) kryo.readClassAndObject(input);
-        return t;
+        Kryo kryo = DEFAULT_FACTORY.getKryo();
+        try {
+            @SuppressWarnings("unchecked")
+            T t = (T) kryo.readClassAndObject(input);
+            return t;
+        } finally {
+            input.close();
+            cleanup(kryo);
+        }
+    }
+
+    private void cleanup(Kryo kryo) {
+        DEFAULT_FACTORY.returnKryo(kryo);
     }
 
 }
