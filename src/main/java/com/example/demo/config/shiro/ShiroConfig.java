@@ -52,7 +52,7 @@ public class ShiroConfig {
     }
 
     @Bean("shiroCacheManager")
-    public CacheManager cacheManager(RedisTemplate<String,Object> template){
+    public CacheManager cacheManager(RedisTemplate<Object,Object> template){
         final RedisCacheManager redisCacheManager = new RedisCacheManager();
         redisCacheManager.setTemplate(template);
         return redisCacheManager;

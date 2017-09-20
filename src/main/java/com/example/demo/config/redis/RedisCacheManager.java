@@ -12,7 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
  */
 public class RedisCacheManager extends AbstractCacheManager {
 
-    private RedisTemplate<String,Object> template;
+    private RedisTemplate<Object,Object> template;
 
     @Override
     protected Cache createCache(final String s) throws CacheException {
@@ -26,7 +26,7 @@ public class RedisCacheManager extends AbstractCacheManager {
         return template;
     }
 
-    public void setTemplate(final RedisTemplate<String,Object> template) {
+    public void setTemplate(final RedisTemplate<Object,Object> template) {
         this.template = template;
     }
 }

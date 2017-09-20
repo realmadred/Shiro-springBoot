@@ -13,27 +13,27 @@ import java.util.Set;
  * @date 2017/9/19
  * @description redis缓存
  */
-public class RedisCache implements Cache<String, Object> {
+public class RedisCache implements Cache<Object, Object> {
 
     private String name;
 
-    private RedisTemplate<String,Object> template;
+    private RedisTemplate<Object,Object> template;
 
-    private ValueOperations<String,Object> operations;
+    private ValueOperations<Object,Object> operations;
 
     @Override
-    public Object get(final String s) throws CacheException {
+    public Object get(final Object s) throws CacheException {
         return operations.get(s);
     }
 
     @Override
-    public Object put(final String s, final Object o) throws CacheException {
+    public Object put(final Object s, final Object o) throws CacheException {
         operations.set(s, o);
         return o;
     }
 
     @Override
-    public String remove(final String s) throws CacheException {
+    public Object remove(final Object s) throws CacheException {
         template.delete(s);
         return s;
     }
@@ -48,7 +48,7 @@ public class RedisCache implements Cache<String, Object> {
     }
 
     @Override
-    public Set<String> keys() {
+    public Set<Object> keys() {
         return null;
     }
 
@@ -61,7 +61,7 @@ public class RedisCache implements Cache<String, Object> {
         return template;
     }
 
-    public void setTemplate(final RedisTemplate<String,Object> template) {
+    public void setTemplate(final RedisTemplate<Object,Object> template) {
         this.template = template;
         operations = template.opsForValue();
     }

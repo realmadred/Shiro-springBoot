@@ -3,8 +3,9 @@ package com.example.demo.config.redis;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.example.demo.config.shiro.MySession;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.shiro.session.mgt.SimpleSession;
+import org.apache.shiro.web.util.SavedRequest;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
@@ -18,15 +19,20 @@ public class KryoRedisSerializer<T> implements RedisSerializer<T> {
 
     private Kryo kryo = new Kryo();
     {
-        kryo.register(SimpleSession.class);
+        kryo.register(MySession.class);
+        kryo.register(SavedRequest.class);
     }
 
     @Override
     public byte[] serialize(T t) throws SerializationException {
-        byte[] buffer = new byte[2048];
-        Output output = new Output(buffer);
-        kryo.writeClassAndObject(output, t);
-        return output.toBytes();
+        Output output = new Output(4096);
+        try {
+            kryo.writeClassAndObject(output, t);
+            return output.toBytes();
+        } finally {
+            output.flush();
+            output.close();
+        }
     }
 
     @Override
