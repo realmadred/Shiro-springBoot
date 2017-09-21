@@ -136,6 +136,11 @@ public class PermissionServiceImpl implements PermissionService {
                 filterManager.getFilterChains().clear();
                 // 配置不会被拦截的链接 顺序判断
                 filterManager.createChain("/static/**", "anon");
+                filterManager.createChain("/css/**", "anon");
+                filterManager.createChain("/js/**", "anon");
+                filterManager.createChain("/i/**", "anon");
+                filterManager.createChain("/img/**", "anon");
+                filterManager.createChain("/*.psd", "anon");
                 // 配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
                 filterManager.createChain("/logout", "logout");
 

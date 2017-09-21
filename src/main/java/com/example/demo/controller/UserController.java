@@ -19,13 +19,18 @@ public class UserController extends BaseController {
 
     @GetMapping({"/","/index"})
     public String index(){
-        return"/index";
+        return"/form";
     }
 
     @GetMapping("/403")
     public String unauthorizedRole(){
         LOGGER.info("------没有权限-------");
         return "403";
+    }
+
+    @GetMapping("/loginPage")
+    public String loginPage(){
+        return "loginPage";
     }
 
     @RequestMapping("/login")
