@@ -43,7 +43,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisTemplate<Object,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
         RedisSerializer<Object> kryoRedisSerializer = new KryoRedisSerializer<>();
-        FstRedisSerializer valueSerializer = new FstRedisSerializer();
+//        FstRedisSerializer valueSerializer = new FstRedisSerializer();
         redisTemplate.setKeySerializer(kryoRedisSerializer);
         redisTemplate.setHashKeySerializer(kryoRedisSerializer);
         redisTemplate.setValueSerializer(kryoRedisSerializer);
