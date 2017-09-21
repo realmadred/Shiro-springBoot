@@ -104,6 +104,15 @@ public interface BaseDao {
     int deleteById(String table, Object id);
 
     /**
+     * 根据多个id删除
+     *
+     * @param table 表名
+     * @param ids   ids
+     * @return 删除的条数
+     */
+    int[] deleteByIds(String table, Object[] ids);
+
+    /**
      * 更新数据
      *
      * @param table  表
@@ -121,4 +130,13 @@ public interface BaseDao {
      * @return 更新的条数
      */
     int updateById(String table, Map<String, Object> data, Object id);
+
+    /**
+     * 更新数据
+     *
+     * @param table 表
+     * @param data  需要更新的数据 包含id
+     * @return 更新的条数
+     */
+    int updateById(String table, Map<String, Object> data);
 }

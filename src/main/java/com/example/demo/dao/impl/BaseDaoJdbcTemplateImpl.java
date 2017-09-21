@@ -3,6 +3,7 @@ package com.example.demo.dao.impl;
 import com.example.demo.dao.BaseDao;
 import com.example.demo.entity.jdbc.*;
 import com.example.demo.util.Common;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ public class BaseDaoJdbcTemplateImpl implements BaseDao {
     private static final List<Map<String, Object>> EMPTY_LIST = new ArrayList<>(0);
     private static final String SEPARATOR = ",";
     private static final String PARAM = "?";
+    private static final String ID = "id";
 
     /**
      * 根据id查询
@@ -238,6 +240,25 @@ public class BaseDaoJdbcTemplateImpl implements BaseDao {
     }
 
     /**
+     * 根据多个id批量删除
+     *
+     * @param table 表名
+     * @param ids   ids
+     * @return 删除的条数
+     */
+    @Override
+    public int[] deleteByIds(final String table, final Object[] ids) {
+        if (StringUtils.isBlank(table) || ArrayUtils.isEmpty(ids)) return new int[0];
+        final String sql = "DELETE FROM "+table+" WHERE id = ?";
+        final int length = ids.length;
+        List<Object[]> args = new ArrayList<>(length);
+        for (int i = 0; i < length; i++) {
+            args.add(new Object[]{ids[i]});
+        }
+        return template.batchUpdate(sql, args);
+    }
+
+    /**
      * 更新数据
      *
      * @param table  表
@@ -305,6 +326,21 @@ public class BaseDaoJdbcTemplateImpl implements BaseDao {
         args[i] = id;
         LOGGER.info(">>>>>>>>sql:{}\n args:{}", sql, Arrays.toString(args));
         return template.update(sql.toString(), args);
+    }
+
+    /**
+     * 更新数据
+     *
+     * @param table 表
+     * @param data  需要更新的数据 包含id
+     * @return 更新的条数
+     */
+    @Override
+    public int updateById(final String table, final Map<String, Object> data) {
+        if (CollectionUtils.isEmpty(data) || !data.containsKey(ID)) return 0;
+        Integer id = Common.getMapInteger(data,ID);
+        data.remove(ID);
+        return updateById(table,data,id);
     }
 
     /**
