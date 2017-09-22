@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import java.util.Map;
 public class BaseController {
 
     /** 结果字符串 */
-    private static final String MSG = "msg";
+    private static final String MSG = "message";
     private static final String STATUS = "status";
     private static final String CODE = "code";
     private static final String RESULT = "result";
@@ -42,9 +41,6 @@ public class BaseController {
         ERROR_RESULT.put(STATUS,STATUS_ERROR);
         ERROR_RESULT.put(CODE,CODE_ERROR);
     }
-
-    // shiro异常类的全类名
-    protected static final String SHIRO_LOGIN_FAILURE = "shiroLoginFailure";
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 

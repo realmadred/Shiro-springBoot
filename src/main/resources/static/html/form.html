@@ -10,19 +10,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
-    <link rel="icon" type="image/png" href="/i/favicon.png">
-    <link rel="apple-touch-icon-precomposed" href="/i/app-icon72x72@2x.png">
+    <link rel="icon" type="image/png" href="../i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="../i/app-icon72x72@2x.png">
     <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
-    <script src="/js/echarts.min.js"></script>
-    <link rel="stylesheet" href="/css/amazeui.min.css"/>
-    <link rel="stylesheet" href="/css/amazeui.datatables.min.css"/>
-    <link rel="stylesheet" href="/css/app.css">
-    <script src="/js/jquery.min.js"></script>
+    <script src="../js/echarts.min.js"></script>
+    <link rel="stylesheet" href="../css/amazeui.min.css"/>
+    <link rel="stylesheet" href="../css/amazeui.datatables.min.css"/>
+    <link rel="stylesheet" href="../css/app.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/theme.js"></script>
 
 </head>
 
 <body data-type="widgets">
-<script src="/js/theme.js"></script>
 <div class="am-g tpl-g">
     <!-- 头部 -->
     <header>
@@ -35,7 +35,6 @@
             <!-- 侧边切换 -->
             <div class="am-fl tpl-header-switch-button am-icon-list">
                     <span>
-
                 </span>
             </div>
             <!-- 搜索 -->
@@ -50,9 +49,8 @@
                 <ul>
                     <!-- 欢迎语 -->
                     <li class="am-text-sm tpl-header-navbar-welcome">
-                        <a href="javascript:;">欢迎你, <span>Amaze UI</span> </a>
+                        <a href="javascript:;">欢迎你, <span>feng</span> </a>
                     </li>
-
                     <!-- 新邮件 -->
                     <li class="am-dropdown tpl-dropdown" data-am-dropdown>
                         <a href="javascript:;" class="am-dropdown-toggle tpl-dropdown-toggle" data-am-dropdown-toggle>
@@ -162,7 +160,7 @@
 
                     <!-- 退出 -->
                     <li class="am-text-sm">
-                        <a href="javascript:;">
+                        <a href="/logout">
                             <span class="am-icon-sign-out"></span> 退出
                         </a>
                     </li>
@@ -191,19 +189,19 @@
         <div class="tpl-sidebar-user-panel">
             <div class="tpl-user-panel-slide-toggleable">
                 <div class="tpl-user-panel-profile-picture">
-                    <img src="/img/user04.png" alt="">
+                    <img src="../img/user04.png" alt="">
                 </div>
                 <span class="user-panel-logged-in-text">
-              <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>
-              禁言小张
-          </span>
+                    <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>
+                    禁言小张
+                </span>
                 <a href="javascript:;" class="tpl-user-panel-action-link"> <span class="am-icon-pencil"></span> 账号设置</a>
             </div>
         </div>
 
         <!-- 菜单 -->
         <ul class="sidebar-nav">
-            <li class="sidebar-nav-heading">Components <span class="sidebar-nav-heading-info"> 附加组件</span></li>
+            <li class="sidebar-nav-heading">菜单</li>
             <li class="sidebar-nav-link">
                 <a href="index.html">
                     <i class="am-icon-home sidebar-nav-link-logo"></i> 首页
@@ -235,7 +233,7 @@
             <li class="sidebar-nav-heading">Page<span class="sidebar-nav-heading-info"> 常用页面</span></li>
             <li class="sidebar-nav-link">
                 <a href="javascript:;" class="sidebar-nav-sub-title">
-                    <i class="am-icon-table sidebar-nav-link-logo"></i> 数据列表
+                    <i class="am-icon-table sidebar-nav-link-logo"></i> 权限列表
                     <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
                 </a>
                 <ul class="sidebar-nav sidebar-nav-sub">
@@ -327,7 +325,8 @@
                                     <label for="user-phone" class="am-u-sm-3 am-form-label">作者 <span
                                             class="tpl-form-line-small-title">Author</span></label>
                                     <div class="am-u-sm-9">
-                                        <select id="user-phone" data-am-selected="{searchBox: 1}" style="display: none;">
+                                        <select id="user-phone" data-am-selected="{searchBox: 1}"
+                                                style="display: none;">
                                             <option value="a">-The.CC</option>
                                             <option value="b">夕风色</option>
                                             <option value="o">Orange</option>
@@ -423,7 +422,7 @@
                                     <label for="user-name" class="am-u-sm-3 am-form-label">标题 <span
                                             class="tpl-form-line-small-title">Title</span></label>
                                     <div class="am-u-sm-9">
-                                        <input  class="tpl-form-input" id="userName1" placeholder="请输入标题文字">
+                                        <input class="tpl-form-input" id="userName1" placeholder="请输入标题文字">
                                         <small>请填写标题文字10-20字左右。</small>
                                     </div>
                                 </div>

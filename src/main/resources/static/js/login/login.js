@@ -20,18 +20,18 @@ $(function () {
         $.ajax({
             url:"/login",
             type:"post",
-            data:{username:username,
-                password:password},
+            data:{"username":username,
+                "password":password},
             dataType: "json",
             success: function (data) {
                 if (data.code == 1){
-                    location.href=htmlPath+"form.html";
+                    location.href=htmlPath+"index.html";
                 }else {
-                    alert(data.msg);
+                    alert(data.message);
                 }
             },
             error: function () {
-                alert("error");
+                alert("error!");
             }
         })
     })

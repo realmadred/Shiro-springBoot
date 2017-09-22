@@ -82,9 +82,10 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl("/html/login.html");
         // 登录成功后要跳转的链接
-//        shiroFilterFactoryBean.setSuccessUrl("/html/form.html");
-        //未授权界面;
+        shiroFilterFactoryBean.setSuccessUrl("/html/index.html");
+        // 未授权界面;
         shiroFilterFactoryBean.setUnauthorizedUrl("/html/403.html");
+        shiroFilterFactoryBean.getFilters().put("authc" ,new CaptchaFormAuthenticationFilter());
         return shiroFilterFactoryBean;
     }
 
