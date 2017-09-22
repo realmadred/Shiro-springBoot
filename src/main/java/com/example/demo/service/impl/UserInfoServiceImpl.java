@@ -1,8 +1,11 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.service.UserInfoService;
+import com.example.demo.util.Common;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -16,9 +19,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public Map<String, Object> findByUsername(String username) {
-        System.out.println("UserInfoServiceImpl.findByUsername()");
+        if (StringUtils.isBlank(username)) return Common.EMPTY_MAP;
         String sql = "select id,name,username,password,salt,state FROM user_info WHERE username = ? LIMIT 1";
-        return jdbcTemplate.queryForMap(sql,username);
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, username);
+        if (CollectionUtils.isEmpty(maps)) return Common.EMPTY_MAP;
+        return maps.get(0);
     }
 
     /**

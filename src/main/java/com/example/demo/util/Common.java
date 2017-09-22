@@ -338,7 +338,7 @@ public class Common {
 		if (methods != null) {
 			return methods;
 		} else {
-			LOGGER.info("--------------refact------------------");
+			LOGGER.info("--------------reflect------------------");
 			methods = MethodUtil.getPublicMethods(clazz);
 			METHOD_CACHE.put(name, methods);
 			return methods;
