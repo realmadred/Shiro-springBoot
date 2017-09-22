@@ -9,7 +9,6 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.lang3.text.StrBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -18,7 +17,10 @@ import sun.reflect.misc.MethodUtil;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
@@ -235,7 +237,7 @@ public class Common {
 	 * @return
 	 */
 	public static boolean isNumber(Object obj) {
-		return NumberUtils.isNumber(toString(obj));
+		return NumberUtils.isDigits(toString(obj));
 	}
 
 	/**
@@ -249,7 +251,7 @@ public class Common {
 		if (str == null || (strLen = str.length()) == 0) {
 			return str;
 		}
-		return new StrBuilder(strLen)
+		return new StringBuilder(strLen)
 				.append(Character.toLowerCase(str.charAt(0)))
 				.append(str.substring(1))
 				.toString();

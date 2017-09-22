@@ -8,9 +8,9 @@ spring:
       password: feng
       driver-class-name: com.mysql.jdbc.Driver
 
-    thymeleaf:
-       cache: false
-       mode: LEGACYHTML5
+#    thymeleaf:
+#       cache: false
+#       mode: LEGACYHTML5
     cache:
       type: redis
 

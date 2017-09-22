@@ -5,88 +5,40 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
 /**
- * @auther Administrator
+ * @auther lf
  * @date 2017/9/13
- * @description 描述
+ * @description 用户管理
  */
-@Controller
+@RestController
 public class UserController extends BaseController {
 
-    @GetMapping({"/","/index"})
-    public String index(){
-        return"/form";
-    }
-
-    @GetMapping("/403")
-    public String unauthorizedRole(){
-        LOGGER.info("------没有权限-------");
-        return "403";
-    }
-
-    @GetMapping("/loginPage")
-    public String loginPage(){
-        return "loginPage";
-    }
-
-    @RequestMapping("/login")
-    public String login(Map<String, Object> map) throws Exception {
+    @PostMapping("/login")
+    public Map<String,Object> login(Map<String, Object> map) throws Exception {
         LOGGER.info("login...");
         // 登录失败从request中获取shiro处理的异常信息。
         String exception = (String) request.getAttribute(SHIRO_LOGIN_FAILURE);
         LOGGER.info("exception={}", exception);
-        String msg = "";
+        String msg ;
         if (exception != null) {
             if (UnknownAccountException.class.getName().equals(exception)) {
-                LOGGER.info("UnknownAccountException -- > 账号不存在：");
-                msg = "UnknownAccountException -- > 账号不存在：";
+                msg = "账号不存在";
             } else if (IncorrectCredentialsException.class.getName().equals(exception)) {
-                LOGGER.info("IncorrectCredentialsException -- > 密码不正确：");
-                msg = "IncorrectCredentialsException -- > 密码不正确：";
+                msg = "密码不正确";
             } else if ("kaptchaValidateFailed".equals(exception)) {
-                LOGGER.info("kaptchaValidateFailed -- > 验证码错误");
-                msg = "kaptchaValidateFailed -- > 验证码错误";
+                msg = "验证码错误";
             } else {
-                msg = "else >> " + exception;
-                LOGGER.info("else -- >" + exception);
+                return error();
             }
+            return fail(msg);
         }
-        map.put("msg", msg);
-        // 此方法不处理登录成功,由shiro进行处理
-        return "/login";
+        return success("");
     }
 
-    /**
-     * 用户查询.
-     * @return
-     */
-    @GetMapping("/userList")
-    @RequiresPermissions("userInfo:view")//权限管理;
-    public String userInfo(){
-        return "userInfo";
-    }
-
-    /**
-     * 用户添加;
-     * @return
-     */
-    @RequestMapping("/userAdd")
-    @RequiresPermissions("userInfo:add")//权限管理;
-    public String userInfoAdd(){
-        return "userInfoAdd";
-    }
-
-    /**
-     * 用户删除;
-     * @return
-     */
-    @RequestMapping("/userDel")
-    @RequiresPermissions("userInfo:del")//权限管理;
-    public String userDel(){
-        return "userInfoDel";
-    }
 }
