@@ -25,7 +25,7 @@ $(function () {
             dataType: "json",
             success: function (data) {
                 if (data.code == 1){
-                    location.href=htmlPath+"index.html";
+                    location.href="index.html";
                 }else {
                     alert(data.message);
                 }

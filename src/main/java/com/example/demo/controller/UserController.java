@@ -26,7 +26,6 @@ public class UserController extends BaseController {
         if (msg != null) {
             return fail(Common.toString(msg));
         }
-        final Map<String, String[]> parameterMap = request.getParameterMap();
         // 获取用户信息
         Session session = SecurityUtils.getSubject().getSession();
         Object attribute = session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);

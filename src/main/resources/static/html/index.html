@@ -16,6 +16,8 @@
     <script src="../js/echarts.min.js"></script>
     <link rel="stylesheet" href="../css/amazeui.min.css" />
     <link rel="stylesheet" href="../css/amazeui.datatables.min.css" />
+    <link rel="stylesheet" href="../css/fullcalendar.min.css" />
+    <link rel="stylesheet" href="../css/fullcalendar.print.css" media='print' />
     <link rel="stylesheet" href="../css/app.css">
     <script src="../js/jquery.min.js"></script>
 
@@ -169,6 +171,7 @@
             </div>
 
         </header>
+
         <!-- 风格切换 -->
         <div class="tpl-skiner">
             <div class="tpl-skiner-toggle am-icon-cog">
@@ -183,6 +186,7 @@
                 </div>
             </div>
         </div>
+
         <!-- 侧边导航栏 -->
         <div class="left-sidebar">
             <!-- 用户信息 -->
@@ -207,49 +211,52 @@
                         <i class="am-icon-home sidebar-nav-link-logo"></i> 首页
                     </a>
                 </li>
-                <li class="sidebar-nav-link">
-                    <a href="tables.html">
+
+                <li class="sidebar-nav-link menu" id="tables">
+                    <a href="javascript:loadHtml('tables.html')">
                         <i class="am-icon-table sidebar-nav-link-logo"></i> 表格
                     </a>
                 </li>
-                <li class="sidebar-nav-link">
-                    <a href="calendar.html">
+                <li class="sidebar-nav-link menu" id="calendar">
+                    <a href="javascript:loadHtml('calendar.html')">
                         <i class="am-icon-calendar sidebar-nav-link-logo"></i> 日历
                     </a>
                 </li>
-                <li class="sidebar-nav-link">
-                    <a href="form.html">
+                <li class="sidebar-nav-link menu" id="form">
+                    <a href="javascript:loadHtml('form.html')">
                         <i class="am-icon-wpforms sidebar-nav-link-logo"></i> 表单
 
                     </a>
                 </li>
-                <li class="sidebar-nav-link">
-                    <a href="chart.html">
+                <li class="sidebar-nav-link menu" id="chart">
+                    <a href="javascript:loadHtml('chart.html')">
                         <i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 图表
-
                     </a>
                 </li>
 
                 <li class="sidebar-nav-heading">Page<span class="sidebar-nav-heading-info"> 常用页面</span></li>
+
                 <li class="sidebar-nav-link">
-                    <a href="javascript:;" class="sidebar-nav-sub-title">
+                    <a href="javascript:" class="sidebar-nav-sub-title">
                         <i class="am-icon-table sidebar-nav-link-logo"></i> 数据列表
                         <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
                     </a>
                     <ul class="sidebar-nav sidebar-nav-sub">
-                        <li class="sidebar-nav-link">
-                            <a href="table-list.html">
+                        <li class="sidebar-nav-link menu" id="table-list">
+                            <a href="javascript:loadHtml('table-list.html')">
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 文字列表
                             </a>
                         </li>
 
-                        <li class="sidebar-nav-link">
-                            <a href="table-list-img.html">
+                        <li class="sidebar-nav-link menu" id="table-list-img">
+                            <a href="javascript:loadHtml('table-list-img.html')">
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 图文列表
                             </a>
                         </li>
                     </ul>
                 </li>
+
+                <!--固定部分-->
                 <li class="sidebar-nav-link">
                     <a href="sign-up.html">
                         <i class="am-icon-clone sidebar-nav-link-logo"></i> 注册
@@ -261,16 +268,11 @@
                         <i class="am-icon-key sidebar-nav-link-logo"></i> 登录
                     </a>
                 </li>
-                <li class="sidebar-nav-link">
-                    <a href="404.html">
-                        <i class="am-icon-tv sidebar-nav-link-logo"></i> 404错误
-                    </a>
-                </li>
             </ul>
         </div>
 
         <!-- 内容区域 -->
-        <div class="tpl-content-wrapper">
+        <div class="tpl-content-wrapper" id="main">
             <div class="container-fluid am-cf">
                 <div class="row">
                     <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
@@ -298,9 +300,9 @@
                                     <div class="widget-fluctuation-period-text">
                                         ￥61746.45
                                         <button class="widget-fluctuation-tpl-btn">
-                        <i class="am-icon-calendar"></i>
-                        更多月份
-                      </button>
+                                            <i class="am-icon-calendar"></i>
+                                            更多月份
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="am-fr am-cf">
@@ -419,92 +421,92 @@
                                 <div class="am-scrollable-horizontal ">
                                     <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black " id="example-r">
                                         <thead>
-                                            <tr>
-                                                <th>文章标题</th>
-                                                <th>作者</th>
-                                                <th>时间</th>
-                                                <th>操作</th>
-                                            </tr>
+                                        <tr>
+                                            <th>文章标题</th>
+                                            <th>作者</th>
+                                            <th>时间</th>
+                                            <th>操作</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="gradeX">
-                                                <td>新加坡大数据初创公司 Latize 获 150 万美元风险融资</td>
-                                                <td>张鹏飞</td>
-                                                <td>2016-09-26</td>
-                                                <td>
-                                                    <div class="tpl-table-black-operation">
-                                                        <a href="javascript:;">
-                                                            <i class="am-icon-pencil"></i> 编辑
-                                                        </a>
-                                                        <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                            <i class="am-icon-trash"></i> 删除
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="even gradeC">
-                                                <td>自拍的“政治角色”：观众背对希拉里自拍合影表示“支持”</td>
-                                                <td>天纵之人</td>
-                                                <td>2016-09-26</td>
-                                                <td>
-                                                    <div class="tpl-table-black-operation">
-                                                        <a href="javascript:;">
-                                                            <i class="am-icon-pencil"></i> 编辑
-                                                        </a>
-                                                        <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                            <i class="am-icon-trash"></i> 删除
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="gradeX">
-                                                <td>关于创新管理，我想和你当面聊聊。</td>
-                                                <td>王宽师</td>
-                                                <td>2016-09-26</td>
-                                                <td>
-                                                    <div class="tpl-table-black-operation">
-                                                        <a href="javascript:;">
-                                                            <i class="am-icon-pencil"></i> 编辑
-                                                        </a>
-                                                        <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                            <i class="am-icon-trash"></i> 删除
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="even gradeC">
-                                                <td>究竟是趋势带动投资，还是投资引领趋势？</td>
-                                                <td>着迷</td>
-                                                <td>2016-09-26</td>
-                                                <td>
-                                                    <div class="tpl-table-black-operation">
-                                                        <a href="javascript:;">
-                                                            <i class="am-icon-pencil"></i> 编辑
-                                                        </a>
-                                                        <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                            <i class="am-icon-trash"></i> 删除
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="even gradeC">
-                                                <td>Docker领域再添一员，网易云发布“蜂巢”，加入云计算之争</td>
-                                                <td>醉里挑灯看键</td>
-                                                <td>2016-09-26</td>
-                                                <td>
-                                                    <div class="tpl-table-black-operation">
-                                                        <a href="javascript:;">
-                                                            <i class="am-icon-pencil"></i> 编辑
-                                                        </a>
-                                                        <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                            <i class="am-icon-trash"></i> 删除
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                        <tr class="gradeX">
+                                            <td>新加坡大数据初创公司 Latize 获 150 万美元风险融资</td>
+                                            <td>张鹏飞</td>
+                                            <td>2016-09-26</td>
+                                            <td>
+                                                <div class="tpl-table-black-operation">
+                                                    <a href="javascript:;">
+                                                        <i class="am-icon-pencil"></i> 编辑
+                                                    </a>
+                                                    <a href="javascript:;" class="tpl-table-black-operation-del">
+                                                        <i class="am-icon-trash"></i> 删除
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="even gradeC">
+                                            <td>自拍的“政治角色”：观众背对希拉里自拍合影表示“支持”</td>
+                                            <td>天纵之人</td>
+                                            <td>2016-09-26</td>
+                                            <td>
+                                                <div class="tpl-table-black-operation">
+                                                    <a href="javascript:;">
+                                                        <i class="am-icon-pencil"></i> 编辑
+                                                    </a>
+                                                    <a href="javascript:;" class="tpl-table-black-operation-del">
+                                                        <i class="am-icon-trash"></i> 删除
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="gradeX">
+                                            <td>关于创新管理，我想和你当面聊聊。</td>
+                                            <td>王宽师</td>
+                                            <td>2016-09-26</td>
+                                            <td>
+                                                <div class="tpl-table-black-operation">
+                                                    <a href="javascript:;">
+                                                        <i class="am-icon-pencil"></i> 编辑
+                                                    </a>
+                                                    <a href="javascript:;" class="tpl-table-black-operation-del">
+                                                        <i class="am-icon-trash"></i> 删除
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="even gradeC">
+                                            <td>究竟是趋势带动投资，还是投资引领趋势？</td>
+                                            <td>着迷</td>
+                                            <td>2016-09-26</td>
+                                            <td>
+                                                <div class="tpl-table-black-operation">
+                                                    <a href="javascript:;">
+                                                        <i class="am-icon-pencil"></i> 编辑
+                                                    </a>
+                                                    <a href="javascript:;" class="tpl-table-black-operation-del">
+                                                        <i class="am-icon-trash"></i> 删除
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="even gradeC">
+                                            <td>Docker领域再添一员，网易云发布“蜂巢”，加入云计算之争</td>
+                                            <td>醉里挑灯看键</td>
+                                            <td>2016-09-26</td>
+                                            <td>
+                                                <div class="tpl-table-black-operation">
+                                                    <a href="javascript:;">
+                                                        <i class="am-icon-pencil"></i> 编辑
+                                                    </a>
+                                                    <a href="javascript:;" class="tpl-table-black-operation-del">
+                                                        <i class="am-icon-trash"></i> 删除
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
 
 
-                                            <!-- more data -->
+                                        <!-- more data -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -515,13 +517,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- 弹出层 -->
+        <div class="am-modal am-modal-no-btn" id="calendar-edit-box">
+            <div class="am-modal-dialog tpl-model-dialog">
+                <div class="am-modal-hd">
+                    <a href="javascript: void(0)" class="am-close edit-box-close am-close-spin" data-am-modal-close>&times;</a>
+                </div>
+                <div class="am-modal-bd tpl-am-model-bd am-cf">
+
+                    <form class="am-form tpl-form-border-form">
+                        <div class="am-form-group am-u-sm-12">
+                            <label for="user-name" class="am-u-sm-12 am-form-label am-text-left">标题 <span class="tpl-form-line-small-title">Title</span></label>
+                            <div class="am-u-sm-12">
+                                <input type="text" class="tpl-form-input am-margin-top-xs calendar-edit-box-title" id="user-name" placeholder="" disabled>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     </div>
+    <script src="../js/moment.js"></script>
     <script src="../js/amazeui.min.js"></script>
     <script src="../js/amazeui.datatables.min.js"></script>
+    <script src="../js/fullcalendar.min.js"></script>
     <script src="../js/dataTables.responsive.min.js"></script>
     <script src="../js/app.js"></script>
-
+    <script>
+        pageData.index();
+    </script>
 </body>
-
 </html>
