@@ -52,8 +52,6 @@ public class Common {
 
 	public static final Map<String, Object> EMPTY_MAP = new HashMap<>(0);
 
-    public static final String UTF_8 = "UTF-8";
-
     /**
 	 * 将null不是的数字转化为0
 	 * 

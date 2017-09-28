@@ -13,14 +13,14 @@
                                     <button class="am-btn am-btn-default am-btn-success" id="perms_add">
                                         <span class="am-icon-plus"></span> 新增
                                     </button>
-                                    <button type="button" class="am-btn am-btn-default am-btn-secondary"><span
-                                            class="am-icon-save"></span> 保存
+                                    <button type="button" class="am-btn am-btn-default am-btn-secondary">
+                                        <span class="am-icon-save"></span> 保存
                                     </button>
-                                    <button type="button" class="am-btn am-btn-default am-btn-warning"><span
-                                            class="am-icon-archive"></span> 审核
+                                    <button type="button" class="am-btn am-btn-default am-btn-warning" id="perms_check">
+                                        <span class="am-icon-archive"></span> 审核
                                     </button>
-                                    <button type="button" class="am-btn am-btn-default am-btn-danger"><span
-                                            class="am-icon-trash-o"></span> 删除
+                                    <button type="button" class="am-btn am-btn-default am-btn-danger">
+                                        <span class="am-icon-trash-o"></span> 删除
                                     </button>
                                 </div>
                             </div>
@@ -78,20 +78,20 @@
 <script>
     $(function () {
         $.ajax({
-            url:"/perms/list",
-            type:"post",
-            data:{"page":1,"pageSize":10},
+            url: "/perms/list",
+            type: "post",
+            data: {"page": 1, "pageSize": 10},
             dataType: "json",
             success: function (data) {
-                if (data.code === 1){
-                    $.each(data.result,function (i,value) {
+                if (data.code === 1) {
+                    $.each(data.result, function (i, value) {
                         console.log(value);
                         $("#perms_body").append("<tr class=\"gradeX\">\n" +
-                            "<td>"+value.id+"</td>\n" +
-                            "<td>"+value.name+"</td>\n" +
-                            "<td>"+value.parent_id+"</td>\n" +
-                            "<td>"+value.permission+"</td>\n" +
-                            "<td>"+value.url+"</td>\n" +
+                            "<td>" + value.id + "</td>\n" +
+                            "<td>" + value.name + "</td>\n" +
+                            "<td>" + value.parent_id + "</td>\n" +
+                            "<td>" + value.permission + "</td>\n" +
+                            "<td>" + value.url + "</td>\n" +
                             "<td>\n" +
                             "    <div class=\"tpl-table-black-operation\">\n" +
                             "        <a href=\"javascript:;\">\n" +
@@ -103,7 +103,7 @@
                             "    </div>\n" +
                             "</td></tr>");
                     });
-                }else {
+                } else {
                     alert(data.message);
                 }
             },
@@ -115,23 +115,27 @@
         $("#perms_add").click(function () {
             $('#my-prompt').modal({
                 closeViaDimmer: false,
-                onConfirm: function() {
-                    const name = $("#perms_modal_name").val();
-                    const perms = $("#perms_modal_perms").val();
-                    const url = $("#perms_modal_url").val();
-
+                onConfirm: function () {
+                    const name = $("#modal_perm_name").val();
+                    const perms = $("#modal_perm_perm").val();
+                    const url = $("#modal_perm_url").val();
+                    addPerms(name, perms, url);
                 },
-                onCancel: function() {
+                onCancel: function () {
                     alert('不想说!');
                 }
             });
         });
-
-
     });
 
-    function addPerms(name,perms,url) {
-
+    function addPerms(name, perms, url) {
+        ajaxPost("/perms/add", {name: name, permission: perms, url: url}, function (data) {
+            if (data.code ===1){
+                alert("ok");
+            }else {
+                failHandler(data);
+            }
+        });
     }
 
 </script>

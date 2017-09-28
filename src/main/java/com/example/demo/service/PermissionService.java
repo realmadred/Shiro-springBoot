@@ -21,7 +21,7 @@ public interface PermissionService {
      * 添加权限
      * @param perm 权限表达式
      */
-    void addPermission(Map<String,Object> perm);
+    int addPermission(Map<String,Object> perm);
 
     /**
      * 删除权限

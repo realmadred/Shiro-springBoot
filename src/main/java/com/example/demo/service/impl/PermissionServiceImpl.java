@@ -6,9 +6,12 @@ import com.example.demo.entity.jdbc.Condition;
 import com.example.demo.entity.jdbc.QueryCondition;
 import com.example.demo.service.PermissionService;
 import com.example.demo.util.Common;
+import com.example.demo.util.Constant;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.util.CollectionUtils;
 import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
+import org.apache.shiro.web.filter.mgt.NamedFilterList;
 import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.slf4j.Logger;
@@ -19,6 +22,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.demo.util.Constant.ANON_CHAIN;
 
 /**
  * @auther Administrator
@@ -40,7 +45,6 @@ public class PermissionServiceImpl implements PermissionService {
     private ShiroFilterFactoryBean filterFactoryBean;
 
     private static final String SYS_PERMISSION = "sys_permission";
-
     private static final String FIELDS = "id,name,parent_id,permission,url";
 
     /**
@@ -72,12 +76,22 @@ public class PermissionServiceImpl implements PermissionService {
      * @param perm 权限表达式
      */
     @Override
-    public void addPermission(final Map<String, Object> perm) {
+    public int addPermission(final Map<String, Object> perm) {
+        String permission = Common.getMapString(perm, "permission");
+        if (StringUtils.isBlank(permission)) return 0;
+        if (!permission.startsWith(Constant.PERMS_PREFIX)) {
+            permission = StringUtils.join(Constant.PERMS_PREFIX,permission,Constant.SECTION_SUFFIX);
+            perm.put("permission",permission);
+        }
         final int i = baseDao.add(SYS_PERMISSION, perm);
         if (i > 0) {
             final DefaultFilterChainManager filterChainManager = getFilterChainManager();
-            filterChainManager.createChain(Common.getMapString(perm, "url"), Common.getMapString(perm, "permission"));
+            final Map<String, NamedFilterList> filterChains = filterChainManager.getFilterChains();
+            filterChains.remove(Constant.ALL_CHAIN);
+            filterChainManager.createChain(Common.getMapString(perm, "url"), permission);
+            filterChainManager.createChain(Constant.ALL_CHAIN, Constant.AUTHC_CHAIN);
         }
+        return i;
     }
 
     /**
@@ -152,16 +166,16 @@ public class PermissionServiceImpl implements PermissionService {
                 //清空拦截管理器中的存储
                 filterManager.getFilterChains().clear();
                 // 配置不会被拦截的链接 顺序判断
-                filterManager.createChain("/static/**", "anon");
-                filterManager.createChain("/html/**", "anon");
-                filterManager.createChain("/fonts/**", "anon");
-                filterManager.createChain("/css/**", "anon");
-                filterManager.createChain("/js/**", "anon");
-                filterManager.createChain("/i/**", "anon");
-                filterManager.createChain("/img/**", "anon");
-                filterManager.createChain("/*.psd", "anon");
+                filterManager.createChain("/static/**", ANON_CHAIN);
+                filterManager.createChain("/html/**", ANON_CHAIN);
+                filterManager.createChain("/fonts/**", ANON_CHAIN);
+                filterManager.createChain("/css/**", ANON_CHAIN);
+                filterManager.createChain("/js/**", ANON_CHAIN);
+                filterManager.createChain("/i/**", ANON_CHAIN);
+                filterManager.createChain("/img/**", ANON_CHAIN);
+                filterManager.createChain("/*.psd", ANON_CHAIN);
                 // 配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
-                filterManager.createChain("/logout", "logout");
+                filterManager.createChain("/logout", Constant.LOGOUT_CHAIN);
 
                 final List<Map<String, Object>> maps = findAll();
                 if (!CollectionUtils.isEmpty(maps)) {
@@ -174,7 +188,7 @@ public class PermissionServiceImpl implements PermissionService {
                     });
                 }
                 //放在最后
-                filterManager.createChain("/**", "authc");
+                filterManager.createChain(Constant.ALL_CHAIN, Constant.AUTHC_CHAIN);
             }
         } catch (Exception e) {
             LOGGER.error("updatePermission error", e);

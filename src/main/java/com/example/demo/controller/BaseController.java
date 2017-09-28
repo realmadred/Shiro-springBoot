@@ -2,10 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.dao.BaseDao;
 import com.example.demo.entity.common.Page;
+import com.example.demo.util.Common;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 
@@ -61,9 +63,23 @@ public class BaseController {
     Map<String,Object> success(Object result){
         Map<String,Object> map = new HashMap<>();
         map.put(MSG,"");
-        map.put(STATUS,STATUS_SUCCESS);
+        map.put(STATUS, STATUS_SUCCESS);
         map.put(CODE,CODE_SUCCESS);
         map.put(RESULT,result);
+        return map;
+    }
+
+    /**
+     * 成功返回
+     * lf
+     * 2017-09-26 17:33:28
+     * @return
+     */
+    Map<String,Object> success(){
+        Map<String,Object> map = new HashMap<>();
+        map.put(MSG,"");
+        map.put(STATUS,HttpStatus.OK);
+        map.put(CODE,CODE_SUCCESS);
         return map;
     }
 
@@ -117,6 +133,59 @@ public class BaseController {
             return Integer.valueOf(parameter);
         }
         return 0;
+    }
+
+    /**
+     * 从请求参数中获取int值
+     * lf
+     * 2017-09-26 17:32:50
+     * @param param
+     * @return
+     */
+    protected String getParam(String param){
+        return request.getParameter(param);
+    }
+
+    /**
+     * 从请求参数中获取int值
+     * lf
+     * 2017-09-26 17:32:50
+     * @param param
+     * @return
+     */
+    protected Integer getParamInt(String param){
+        final String parameter = request.getParameter(param);
+        if (NumberUtils.isDigits(parameter)){
+            return Integer.valueOf(parameter);
+        }
+        return 0;
+    }
+
+    /**
+     * 从请求参数中获取int值
+     * lf
+     * 2017-09-26 17:32:50
+     * @param param
+     * @return
+     */
+    protected Long getParamLong(String param){
+        final String parameter = request.getParameter(param);
+        if (NumberUtils.isDigits(parameter)){
+            return Long.valueOf(parameter);
+        }
+        return 0L;
+    }
+
+    /**
+     * 从请求参数中获取int值
+     * lf
+     * 2017-09-26 17:32:50
+     * @param param
+     * @return
+     */
+    protected Double getParamDoule(String param){
+        final String parameter = request.getParameter(param);
+        return Common.getDouble(parameter);
     }
 
 

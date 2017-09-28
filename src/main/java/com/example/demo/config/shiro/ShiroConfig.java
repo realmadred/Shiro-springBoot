@@ -1,6 +1,7 @@
 package com.example.demo.config.shiro;
 
 import com.example.demo.config.redis.RedisCacheManager;
+import com.example.demo.util.Constant;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
@@ -85,7 +86,8 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSuccessUrl("/html/index.html");
         // 未授权界面;
         shiroFilterFactoryBean.setUnauthorizedUrl("/html/403.html");
-        shiroFilterFactoryBean.getFilters().put("authc" ,new CaptchaFormAuthenticationFilter());
+        shiroFilterFactoryBean.getFilters().put(Constant.AUTHC_CHAIN,new CaptchaFormAuthenticationFilter());
+        shiroFilterFactoryBean.getFilters().put(Constant.PERMS_CHAIN,new MyPermsAuthenticationFilter());
         return shiroFilterFactoryBean;
     }
 
