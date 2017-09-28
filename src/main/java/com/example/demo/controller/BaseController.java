@@ -1,8 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.dao.BaseDao;
+import com.example.demo.entity.common.Page;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +51,13 @@ public class BaseController {
     @Autowired
     protected HttpServletRequest request;
 
+    /**
+     * 成功返回
+     * lf
+     * 2017-09-26 17:33:28
+     * @param result
+     * @return
+     */
     Map<String,Object> success(Object result){
         Map<String,Object> map = new HashMap<>();
         map.put(MSG,"");
@@ -56,6 +67,13 @@ public class BaseController {
         return map;
     }
 
+    /**
+     * 失败返回
+     * lf
+     * 2017-09-26 17:33:38
+     * @param msg
+     * @return
+     */
     Map<String,Object> fail(String msg){
         Map<String,Object> map = new HashMap<>();
         map.put(MSG,msg);
@@ -64,8 +82,42 @@ public class BaseController {
         return map;
     }
 
+    /**
+     * 发送错误
+     * lf
+     * 2017-09-26 17:33:54
+     * @return
+     */
     Map<String,Object> error(){
         return ERROR_RESULT;
     }
+
+    /**
+     * 获取page
+     * lf
+     * 2017-09-26 17:33:02
+     */
+    protected Page getPage(){
+        final Integer page = getInteger(request,"page");
+        final Integer pageSize = getInteger(request,"pageSize");
+        return new Page(page,pageSize);
+    }
+
+    /**
+     * 从请求参数中获取int值
+     * lf
+     * 2017-09-26 17:32:50
+     * @param request
+     * @param param
+     * @return
+     */
+    private Integer getInteger(HttpServletRequest request,String param){
+        final String parameter = request.getParameter(param);
+        if (NumberUtils.isDigits(parameter)){
+            return Integer.valueOf(parameter);
+        }
+        return 0;
+    }
+
 
 }

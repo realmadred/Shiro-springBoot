@@ -1,0 +1,137 @@
+<div class="row-content am-cf">
+    <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">权限列表</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                        <div class="am-form-group">
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs">
+                                    <button class="am-btn am-btn-default am-btn-success" id="perms_add">
+                                        <span class="am-icon-plus"></span> 新增
+                                    </button>
+                                    <button type="button" class="am-btn am-btn-default am-btn-secondary"><span
+                                            class="am-icon-save"></span> 保存
+                                    </button>
+                                    <button type="button" class="am-btn am-btn-default am-btn-warning"><span
+                                            class="am-icon-archive"></span> 审核
+                                    </button>
+                                    <button type="button" class="am-btn am-btn-default am-btn-danger"><span
+                                            class="am-icon-trash-o"></span> 删除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                        <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                            <input type="text" class="am-form-field ">
+                            <span class="am-input-group-btn">
+                                     <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search"
+                                             type="button"></button>
+                                </span>
+                        </div>
+                    </div>
+
+                    <div class="am-u-sm-12">
+                        <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black"
+                               id="example-r">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>name</th>
+                                <th>parent_id</th>
+                                <th>权限</th>
+                                <th>url</th>
+                            </tr>
+                            </thead>
+                            <tbody id="perms_body">
+
+                            <!--数据-->
+                            <!-- more data -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="am-u-lg-12 am-cf">
+                        <div class="am-fr">
+                            <ul class="am-pagination tpl-pagination">
+                                <li class="am-disabled"><a href="#">«</a></li>
+                                <li class="am-active"><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li><a href="#">5</a></li>
+                                <li><a href="#">»</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script href="/js/perms/perms.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            url:"/perms/list",
+            type:"post",
+            data:{"page":1,"pageSize":10},
+            dataType: "json",
+            success: function (data) {
+                if (data.code === 1){
+                    $.each(data.result,function (i,value) {
+                        console.log(value);
+                        $("#perms_body").append("<tr class=\"gradeX\">\n" +
+                            "<td>"+value.id+"</td>\n" +
+                            "<td>"+value.name+"</td>\n" +
+                            "<td>"+value.parent_id+"</td>\n" +
+                            "<td>"+value.permission+"</td>\n" +
+                            "<td>"+value.url+"</td>\n" +
+                            "<td>\n" +
+                            "    <div class=\"tpl-table-black-operation\">\n" +
+                            "        <a href=\"javascript:;\">\n" +
+                            "            <i class=\"am-icon-pencil\"></i> 编辑\n" +
+                            "        </a>\n" +
+                            "        <a href=\"javascript:;\" class=\"tpl-table-black-operation-del\">\n" +
+                            "            <i class=\"am-icon-trash\"></i> 删除\n" +
+                            "        </a>\n" +
+                            "    </div>\n" +
+                            "</td></tr>");
+                    });
+                }else {
+                    alert(data.message);
+                }
+            },
+            error: function () {
+                alert("error!");
+            }
+        });
+
+        $("#perms_add").click(function () {
+            $('#my-prompt').modal({
+                closeViaDimmer: false,
+                onConfirm: function() {
+                    const name = $("#perms_modal_name").val();
+                    const perms = $("#perms_modal_perms").val();
+                    const url = $("#perms_modal_url").val();
+
+                },
+                onCancel: function() {
+                    alert('不想说!');
+                }
+            });
+        });
+
+
+    });
+
+    function addPerms(name,perms,url) {
+
+    }
+
+</script>

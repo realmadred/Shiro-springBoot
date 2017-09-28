@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dao.BaseDao;
+import com.example.demo.entity.common.Page;
 import com.example.demo.entity.jdbc.Condition;
+import com.example.demo.entity.jdbc.QueryCondition;
 import com.example.demo.service.PermissionService;
 import com.example.demo.util.Common;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -39,14 +41,29 @@ public class PermissionServiceImpl implements PermissionService {
 
     private static final String SYS_PERMISSION = "sys_permission";
 
+    private static final String FIELDS = "id,name,parent_id,permission,url";
+
     /**
      * 查询所有的权限
      */
     @Override
     public List<Map<String, Object>> findAll() {
-        String sql = "SELECT id,name,parent_id,permission,url" +
+        String sql = "SELECT " +FIELDS+
                 " FROM sys_permission WHERE available = 'true'";
         return jdbcTemplate.queryForList(sql);
+    }
+
+    /**
+     * 分页查询权限
+     *
+     * @param page
+     */
+    @Override
+    public List<Map<String, Object>> findByPage(final Page page) {
+        if (page == null) return null;
+        return baseDao.find(SYS_PERMISSION, FIELDS,
+                QueryCondition.create(page.getPage(),page.getPageSize())
+                        .addCondition("available","true"));
     }
 
     /**

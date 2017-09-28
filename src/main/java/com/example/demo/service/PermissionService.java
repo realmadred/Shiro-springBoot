@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.common.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,11 @@ public interface PermissionService {
     List<Map<String, Object>> findAll();
 
     /**
+     * 分页查询权限
+     */
+    List<Map<String, Object>> findByPage(Page page);
+
+    /**
      * 添加权限
      * @param perm 权限表达式
      */
@@ -19,7 +25,6 @@ public interface PermissionService {
 
     /**
      * 删除权限
-     * @param url url
      * @param perm 权限表达式
      */
     void delPermission(Map<String,Object> perm);

@@ -248,6 +248,12 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-nav-link menu" id="perms-list">
+                            <a href="javascript:loadHtml('perms/perms.html')">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 权限列表
+                            </a>
+                        </li>
+
                         <li class="sidebar-nav-link menu" id="table-list-img">
                             <a href="javascript:loadHtml('table-list-img.html')">
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 图文列表
@@ -534,6 +540,22 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <!--弹出层 增加权限-->
+        <div class="am-modal am-modal-prompt" tabindex="-2" id="my-prompt">
+            <div class="am-modal-dialog">
+                <div class="am-modal-hd">Amaze UI</div>
+                <div class="am-modal-bd">
+                    name：<input class="am-modal-prompt-input" id="perms_modal_name">
+                    权限：<input class="am-modal-prompt-input" id="perms_modal_perms">
+                    url：<input class="am-modal-prompt-input" id="perms_modal_url">
+                </div>
+                <div class="am-modal-footer">
+                    <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                    <span class="am-modal-btn" data-am-modal-confirm>提交</span>
                 </div>
             </div>
         </div>
