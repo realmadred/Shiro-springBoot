@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.util.Constant;
 import org.apache.shiro.codec.Hex;
 import org.apache.shiro.crypto.AesCipherService;
 import org.junit.Test;
@@ -29,4 +30,11 @@ public class CipherServiceTest {
         System.out.println(encrypt+" : "+decrypt);
     }
 
+    @Test
+    public void test2() {
+        String string = "perms[permsAdd]";
+        final int start = string.indexOf(Constant.SECTION_PREFIX);
+        final int end = string.indexOf(Constant.SECTION_SUFFIX);
+        System.out.println(string.substring(start+1,end).toLowerCase());
+    }
 }

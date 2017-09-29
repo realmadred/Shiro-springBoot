@@ -7,6 +7,7 @@ import com.example.demo.entity.jdbc.QueryCondition;
 import com.example.demo.service.PermissionService;
 import com.example.demo.util.Common;
 import com.example.demo.util.Constant;
+import com.example.demo.util.Tables;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.util.CollectionUtils;
@@ -18,8 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +47,6 @@ public class PermissionServiceImpl implements PermissionService {
     @Resource
     private ShiroFilterFactoryBean filterFactoryBean;
 
-    private static final String SYS_PERMISSION = "sys_permission";
     private static final String FIELDS = "id,name,parent_id,permission,url";
 
     /**
@@ -65,7 +67,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public List<Map<String, Object>> findByPage(final Page page) {
         if (page == null) return null;
-        return baseDao.find(SYS_PERMISSION, FIELDS,
+        return baseDao.find(Tables.SYS_PERMISSION, FIELDS,
                 QueryCondition.create(page.getPage(),page.getPageSize())
                         .addCondition("available","true"));
     }
@@ -76,6 +78,7 @@ public class PermissionServiceImpl implements PermissionService {
      * @param perm 权限表达式
      */
     @Override
+    @Transactional
     public int addPermission(final Map<String, Object> perm) {
         String permission = Common.getMapString(perm, "permission");
         if (StringUtils.isBlank(permission)) return 0;
@@ -83,15 +86,29 @@ public class PermissionServiceImpl implements PermissionService {
             permission = StringUtils.join(Constant.PERMS_PREFIX,permission,Constant.SECTION_SUFFIX);
             perm.put("permission",permission);
         }
-        final int i = baseDao.add(SYS_PERMISSION, perm);
-        if (i > 0) {
+        final int permissionId = baseDao.add(Tables.SYS_PERMISSION, perm);
+        if (permissionId > 0) {
+            // 查询管理员的角色id
+            final List<Map<String, Object>> maps = baseDao.find(Tables.SYS_ROLE, "id", QueryCondition.create(1, 1)
+                    .addCondition("role", Constant.ROLE_ADMIN));
+            if (!CollectionUtils.isEmpty(maps)){
+                final Map<String, Object> map = maps.get(0);
+                final int id = Common.getMapInteger(map, "id");
+                if (id > 0){
+                    // 绑定权限
+                    Map<String,Object> data = new HashMap<>();
+                    data.put("role_id",id);
+                    data.put("permission_id",permissionId);
+                    baseDao.add(Tables.SYS_ROLE_PERMISSION,data);
+                }
+            }
             final DefaultFilterChainManager filterChainManager = getFilterChainManager();
             final Map<String, NamedFilterList> filterChains = filterChainManager.getFilterChains();
             filterChains.remove(Constant.ALL_CHAIN);
             filterChainManager.createChain(Common.getMapString(perm, "url"), permission);
             filterChainManager.createChain(Constant.ALL_CHAIN, Constant.AUTHC_CHAIN);
         }
-        return i;
+        return permissionId;
     }
 
     /**
@@ -101,7 +118,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public void delPermission(final Map<String, Object> perm) {
-        final int i = baseDao.delete(SYS_PERMISSION, Condition.create().addEqConditions(perm));
+        final int i = baseDao.delete(Tables.SYS_PERMISSION, Condition.create().addEqConditions(perm));
         if (i > 0) {
             reloadPermissions();
         }
@@ -114,7 +131,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public int delPermissionById(final Integer id) {
-        final int i = baseDao.deleteById(SYS_PERMISSION, id);
+        final int i = baseDao.deleteById(Tables.SYS_PERMISSION, id);
         if (i > 0) {
             reloadPermissions();
         }
@@ -128,7 +145,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public void updatePermissionById(final Map<String, Object> perm) {
-        final int i = baseDao.updateById(SYS_PERMISSION, perm);
+        final int i = baseDao.updateById(Tables.SYS_PERMISSION, perm);
         if (i > 0) reloadPermissions();
     }
 
@@ -140,7 +157,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public void addPermissions(final List<Map<String, Object>> perms) {
         if (CollectionUtils.isEmpty(perms)) return;
-        perms.forEach(map -> baseDao.add(SYS_PERMISSION, map));
+        perms.forEach(map -> baseDao.add(Tables.SYS_PERMISSION, map));
         reloadPermissions();
     }
 
@@ -152,7 +169,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public void delPermissions(final List<Map<String, Object>> perms) {
         if (CollectionUtils.isEmpty(perms)) return;
-        perms.forEach(map -> baseDao.delete(SYS_PERMISSION, Condition.create().addEqConditions(map)));
+        perms.forEach(map -> baseDao.delete(Tables.SYS_PERMISSION, Condition.create().addEqConditions(map)));
         reloadPermissions();
     }
 
@@ -163,7 +180,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public void delPermissionsByIds(final Object[] ids) {
-        baseDao.deleteByIds(SYS_PERMISSION, ids);
+        baseDao.deleteByIds(Tables.SYS_PERMISSION, ids);
         reloadPermissions();
     }
 

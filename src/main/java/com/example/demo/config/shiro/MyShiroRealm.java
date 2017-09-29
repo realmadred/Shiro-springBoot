@@ -3,6 +3,8 @@ package com.example.demo.config.shiro;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.Common;
+import com.example.demo.util.Constant;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -43,7 +45,9 @@ public class MyShiroRealm extends AuthorizingRealm {
             // 查询权限
             final List<Map<String, Object>> permissions = roleService.findPermissionsById(roleId);
             for(Map<String, Object> p:permissions){
-                authorizationInfo.addStringPermission(Common.getMapString(p,"permission"));
+                final String permission = Common.getMapString(p, "permission");
+                if (StringUtils.isBlank(permission)) continue;
+                authorizationInfo.addStringPermission(resolverPerms(permission));
             }
         }
         return authorizationInfo;
@@ -71,6 +75,17 @@ public class MyShiroRealm extends AuthorizingRealm {
                 getName()  //realm name
         );
         return authenticationInfo;
+    }
+
+    /**
+     * 处理权限字符串
+     * @param perms
+     * @return
+     */
+    private String resolverPerms(String perms){
+        final int start = perms.indexOf(Constant.SECTION_PREFIX);
+        final int end = perms.indexOf(Constant.SECTION_SUFFIX);
+        return perms.substring(start+1,end).toLowerCase();
     }
 
 }
