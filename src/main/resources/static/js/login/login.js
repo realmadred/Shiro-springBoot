@@ -15,18 +15,31 @@ $(function () {
 
     // 绑定单击事件
     $("#login").click(function () {
+        login();
+    });
+
+    // 按键事件
+    $("#login_password").keyup(function (e) {
+        if (e.keyCode === 13){
+            login();
+        }
+    });
+
+    function login() {
         var username = $("#login_user_name").val();
         var password = $("#login_password").val();
         $.ajax({
-            url:"/login",
-            type:"post",
-            data:{"username":username,
-                "password":password},
+            url: "/login",
+            type: "post",
+            data: {
+                "username": username,
+                "password": password
+            },
             dataType: "json",
             success: function (data) {
-                if (data.code == 1){
-                    location.href="index.html";
-                }else {
+                if (data.code === 1) {
+                    location.href = "index.html";
+                } else {
                     alert(data.message);
                 }
             },
@@ -34,5 +47,5 @@ $(function () {
                 alert("error!");
             }
         })
-    })
+    }
 });

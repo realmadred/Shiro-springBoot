@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import static com.example.demo.util.Constant.ANON_CHAIN;
 
@@ -197,14 +198,11 @@ public class PermissionServiceImpl implements PermissionService {
                 //清空拦截管理器中的存储
                 filterManager.getFilterChains().clear();
                 // 配置不会被拦截的链接 顺序判断
-                filterManager.createChain("/static/**", ANON_CHAIN);
-                filterManager.createChain("/html/**", ANON_CHAIN);
-                filterManager.createChain("/fonts/**", ANON_CHAIN);
-                filterManager.createChain("/css/**", ANON_CHAIN);
-                filterManager.createChain("/js/**", ANON_CHAIN);
-                filterManager.createChain("/i/**", ANON_CHAIN);
-                filterManager.createChain("/img/**", ANON_CHAIN);
-                filterManager.createChain("/*.psd", ANON_CHAIN);
+                Scanner scanner = new Scanner(Constant.SHIRO_NOT_CHAIN);
+                scanner.useDelimiter(",");
+                while (scanner.hasNext()){
+                    filterManager.createChain(scanner.next(), ANON_CHAIN);
+                }
                 // 配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
                 filterManager.createChain("/logout", Constant.LOGOUT_CHAIN);
 
