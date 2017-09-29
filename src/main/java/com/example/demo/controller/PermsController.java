@@ -35,6 +35,16 @@ public class PermsController extends BaseController {
     public Map<String,Object> add(@RequestBody Map<String,Object> data) throws Exception {
         final int i = permissionService.addPermission(data);
         if (i>0){
+            return success(i);
+        }else {
+            return fail("添加权限失败！");
+        }
+    }
+
+    @PostMapping("/del")
+    public Map<String,Object> del(Integer id) throws Exception {
+        final int i = permissionService.delPermissionById(id);
+        if (i>0){
             return success();
         }else {
             return fail("添加权限失败！");

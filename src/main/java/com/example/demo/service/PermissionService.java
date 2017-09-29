@@ -30,6 +30,12 @@ public interface PermissionService {
     void delPermission(Map<String,Object> perm);
 
     /**
+     * 删除权限
+     * @param id 权限id
+     */
+    int delPermissionById(Integer id);
+
+    /**
      * 修改权限
      * @param perm 权限表达式
      */

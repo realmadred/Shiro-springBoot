@@ -108,6 +108,20 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     /**
+     * 删除权限
+     *
+     * @param id 权限id
+     */
+    @Override
+    public int delPermissionById(final Integer id) {
+        final int i = baseDao.deleteById(SYS_PERMISSION, id);
+        if (i > 0) {
+            reloadPermissions();
+        }
+        return i;
+    }
+
+    /**
      * 修改权限,需要id
      *
      * @param perm 权限表达式

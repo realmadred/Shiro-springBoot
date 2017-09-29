@@ -46,6 +46,7 @@
                                 <th>parent_id</th>
                                 <th>权限</th>
                                 <th>url</th>
+                                <th>操作</th>
                             </tr>
                             </thead>
                             <tbody id="perms_body">
@@ -85,23 +86,7 @@
             success: function (data) {
                 if (data.code === 1) {
                     $.each(data.result, function (i, value) {
-                        console.log(value);
-                        $("#perms_body").append("<tr class=\"gradeX\">\n" +
-                            "<td>" + value.id + "</td>\n" +
-                            "<td>" + value.name + "</td>\n" +
-                            "<td>" + value.parent_id + "</td>\n" +
-                            "<td>" + value.permission + "</td>\n" +
-                            "<td>" + value.url + "</td>\n" +
-                            "<td>\n" +
-                            "    <div class=\"tpl-table-black-operation\">\n" +
-                            "        <a href=\"javascript:;\">\n" +
-                            "            <i class=\"am-icon-pencil\"></i> 编辑\n" +
-                            "        </a>\n" +
-                            "        <a href=\"javascript:;\" class=\"tpl-table-black-operation-del\">\n" +
-                            "            <i class=\"am-icon-trash\"></i> 删除\n" +
-                            "        </a>\n" +
-                            "    </div>\n" +
-                            "</td></tr>");
+                        appendPerm(value.id,value.name,value.parent_id,value.permission,value.url);
                     });
                 } else {
                     alert(data.message);
@@ -122,20 +107,54 @@
                     addPerms(name, perms, url);
                 },
                 onCancel: function () {
-                    alert('不想说!');
                 }
             });
         });
     });
 
+    // 删除事件
+    $("#perms_body").on("click","tr div .tpl-table-black-operation-del",function () {
+        var $tr = $(this).parents("tr");
+        const id = $tr.children("td").first().text();
+        ajaxPostOneParam("/perms/del",{id:id},function (data) {
+            if (data.code ===1){
+                $tr.empty();
+            }else {
+                failHandler(data);
+            }
+        })
+    });
+
     function addPerms(name, perms, url) {
         ajaxPost("/perms/add", {name: name, permission: perms, url: url}, function (data) {
             if (data.code ===1){
-                alert("ok");
+                console.log(data);
+                // 添加
+                appendPerm(data.result,name,0,perms,url);
             }else {
                 failHandler(data);
             }
         });
+    }
+
+    // 添加行
+    function appendPerm(id,name,parent,perm,url) {
+        $("#perms_body").append("<tr class=\"gradeX\">\n" +
+            "<td>" + id + "</td>\n" +
+            "<td>" + name + "</td>\n" +
+            "<td>" + parent + "</td>\n" +
+            "<td>" + perm + "</td>\n" +
+            "<td>" + url + "</td>\n" +
+            "<td>\n" +
+            "    <div class=\"tpl-table-black-operation\">\n" +
+            "        <a href=\"javascript:;\">\n" +
+            "            <i class=\"am-icon-pencil\"></i> 编辑\n" +
+            "        </a>\n" +
+            "        <a href=\"javascript:;\" class=\"tpl-table-black-operation-del\">\n" +
+            "            <i class=\"am-icon-trash\"></i> 删除\n" +
+            "        </a>\n" +
+            "    </div>\n" +
+            "</td></tr>");
     }
 
 </script>
