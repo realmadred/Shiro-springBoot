@@ -5,7 +5,7 @@ const FORBIDDEN_PATH = htmlPath + "403.html";
 const LOGIN_PATH = htmlPath + "login.html";
 
 
-const userInfo = "userInfo";
+const USER_INFO = "userInfo";
 const userPerms = "userPerms";
 const DEFAULT_POST = "post";
 const DEFAULT_GET = "get";
@@ -70,3 +70,18 @@ const failHandler = function (data) {
         alert("操作失败！");
     }
 };
+
+/**保存session*/
+const sessionStorageSave = function(key,value) {
+    sessionStorage.setItem(key, JSON.stringify(value));
+};
+
+/**加载session*/
+const sessionStorageLoad = function (key) {
+    const item = sessionStorage.getItem(key);
+    if (item) {
+        return JSON.parse(item)
+    } else {
+        return false
+    }
+}

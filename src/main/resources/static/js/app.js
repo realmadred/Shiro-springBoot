@@ -3,6 +3,9 @@ $(function() {
     $(window).resize(function() {
         autoLeftNav();
     });
+
+    // 设置用户信息
+    $("#sidebar_user_name").text(sessionStorageLoad(USER_INFO).username);
 });
 
 function loadHtml(html) {

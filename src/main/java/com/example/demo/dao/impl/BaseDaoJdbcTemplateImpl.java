@@ -58,9 +58,11 @@ public class BaseDaoJdbcTemplateImpl implements BaseDao {
         StringBuilder sql = new StringBuilder()
                 .append(SELECT)
                 .append(fields).append(FROM)
-                .append(table).append(WHERE_ID);
+                .append(table).append(WHERE_ID).append(LIMIT_1);
         LOGGER.info(">>>>>>>>sql:{}\n args:{}", sql, id);
-        return template.queryForMap(sql.toString(), id);
+        final List<Map<String, Object>> maps = template.queryForList(sql.toString(), id);
+        if (CollectionUtils.isEmpty(maps)) return EMPTY_MAP;
+        return maps.get(0);
     }
 
     /**
@@ -128,6 +130,32 @@ public class BaseDaoJdbcTemplateImpl implements BaseDao {
         sql.append(condition);
         LOGGER.info(">>>>>>>>args:{}", args);
         return template.queryForList(checkSql(sql), args.toArray());
+    }
+
+    /**
+     * 根据条件查询,只查询一条
+     *
+     * @param table     表
+     * @param fields    查询字段
+     * @param condition 条件
+     * @return
+     */
+    @Override
+    public Map<String, Object> findOne(String table, String fields, @Nonnull QueryCondition condition) {
+        if (Common.hasEmpty(table, fields, condition)) return EMPTY_MAP;
+        StringBuilder sql = new StringBuilder(32);
+        sql.append(SELECT).append(fields).append(FROM).append(table).append(WHERE);
+
+        // 处理条件
+        List<Object> args = new ArrayList<>();
+        handleCondition(condition, sql, args);
+        condition.setSize(1);
+        // 追加其它的order group limit等等
+        sql.append(condition);
+        LOGGER.info(">>>>>>>>args:{}", args);
+        final List<Map<String, Object>> maps = template.queryForList(checkSql(sql), args.toArray());
+        if (CollectionUtils.isEmpty(maps)) return EMPTY_MAP;
+        return maps.get(0);
     }
 
     /**
@@ -433,7 +461,8 @@ public class BaseDaoJdbcTemplateImpl implements BaseDao {
         AND(" AND "),
         SET(" SET "),
         EQUAL_PARAM(" = ? "),
-        SELECT_COUNT_FROM("SELECT COUNT(*) FROM ");
+        SELECT_COUNT_FROM("SELECT COUNT(*) FROM "),
+        LIMIT_1(" limit 1 ");
 
         String value;
 

@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * 角色服务
  */
-public interface RoleService {
+public interface RoleService extends BaseService {
 
 
     /**通过角色id查找用户信息*/

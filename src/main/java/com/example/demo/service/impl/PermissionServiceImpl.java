@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dao.BaseDao;
 import com.example.demo.entity.common.Page;
 import com.example.demo.entity.jdbc.Condition;
 import com.example.demo.entity.jdbc.QueryCondition;
@@ -17,7 +16,6 @@ import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,15 +33,9 @@ import static com.example.demo.util.Constant.ANON_CHAIN;
  * @description 权限服务
  */
 @Service("permissionService")
-public class PermissionServiceImpl implements PermissionService {
+public class PermissionServiceImpl extends BaseServiceImpl implements PermissionService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionServiceImpl.class);
-
-    @Resource
-    private JdbcTemplate jdbcTemplate;
-
-    @Resource
-    private BaseDao baseDao;
 
     @Resource
     private ShiroFilterFactoryBean filterFactoryBean;
@@ -55,7 +47,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public List<Map<String, Object>> findAll() {
-        String sql = "SELECT " +FIELDS+
+        String sql = "SELECT " + FIELDS +
                 " FROM sys_permission WHERE available = 'true'";
         return jdbcTemplate.queryForList(sql);
     }
@@ -69,8 +61,8 @@ public class PermissionServiceImpl implements PermissionService {
     public List<Map<String, Object>> findByPage(final Page page) {
         if (page == null) return null;
         return baseDao.find(Tables.SYS_PERMISSION, FIELDS,
-                QueryCondition.create(page.getPage(),page.getPageSize())
-                        .addCondition("available","true"));
+                QueryCondition.create(page.getPage(), page.getPageSize())
+                        .addCondition("available", "true"));
     }
 
     /**
@@ -84,23 +76,23 @@ public class PermissionServiceImpl implements PermissionService {
         String permission = Common.getMapString(perm, "permission");
         if (StringUtils.isBlank(permission)) return 0;
         if (!permission.startsWith(Constant.PERMS_PREFIX)) {
-            permission = StringUtils.join(Constant.PERMS_PREFIX,permission,Constant.SECTION_SUFFIX);
-            perm.put("permission",permission);
+            permission = StringUtils.join(Constant.PERMS_PREFIX, permission, Constant.SECTION_SUFFIX);
+            perm.put("permission", permission);
         }
         final int permissionId = baseDao.add(Tables.SYS_PERMISSION, perm);
         if (permissionId > 0) {
             // 查询管理员的角色id
             final List<Map<String, Object>> maps = baseDao.find(Tables.SYS_ROLE, "id", QueryCondition.create(1, 1)
                     .addCondition("role", Constant.ROLE_ADMIN));
-            if (!CollectionUtils.isEmpty(maps)){
+            if (!CollectionUtils.isEmpty(maps)) {
                 final Map<String, Object> map = maps.get(0);
                 final int id = Common.getMapInteger(map, "id");
-                if (id > 0){
+                if (id > 0) {
                     // 绑定权限
-                    Map<String,Object> data = new HashMap<>();
-                    data.put("role_id",id);
-                    data.put("permission_id",permissionId);
-                    baseDao.add(Tables.SYS_ROLE_PERMISSION,data);
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("role_id", id);
+                    data.put("permission_id", permissionId);
+                    baseDao.add(Tables.SYS_ROLE_PERMISSION, data);
                 }
             }
             final DefaultFilterChainManager filterChainManager = getFilterChainManager();
@@ -194,13 +186,13 @@ public class PermissionServiceImpl implements PermissionService {
     public void reloadPermissions() {
         try {
             final DefaultFilterChainManager filterManager = getFilterChainManager();
-            synchronized (this){
+            synchronized (this) {
                 //清空拦截管理器中的存储
                 filterManager.getFilterChains().clear();
                 // 配置不会被拦截的链接 顺序判断
                 Scanner scanner = new Scanner(Constant.SHIRO_NOT_CHAIN);
                 scanner.useDelimiter(",");
-                while (scanner.hasNext()){
+                while (scanner.hasNext()) {
                     filterManager.createChain(scanner.next(), ANON_CHAIN);
                 }
                 // 配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了

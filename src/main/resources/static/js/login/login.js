@@ -38,6 +38,7 @@ $(function () {
             dataType: "json",
             success: function (data) {
                 if (data.code === 1) {
+                    sessionStorageSave(USER_INFO,data.result);
                     location.href = "index.html";
                 } else {
                     alert(data.message);

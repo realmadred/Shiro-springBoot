@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.service.UserInfoService;
 import com.example.demo.util.Common;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +20,9 @@ import java.util.Map;
 @RestController
 public class UserController extends BaseController {
 
+    @Autowired
+    private UserInfoService infoService;
+
     @PostMapping("/login")
     public Map<String,Object> login() throws Exception {
         LOGGER.info("login...");
@@ -29,8 +34,8 @@ public class UserController extends BaseController {
         // 获取用户信息
         Session session = SecurityUtils.getSubject().getSession();
         Object attribute = session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-        System.out.print(attribute);
-        return success("");
+        final Map<String, Object> map = infoService.findById(Common.getInteger(attribute));
+        return success(map);
     }
 
 }

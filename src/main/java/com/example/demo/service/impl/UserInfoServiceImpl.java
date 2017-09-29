@@ -2,28 +2,36 @@ package com.example.demo.service.impl;
 
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.Common;
+import com.example.demo.util.Tables;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserInfoServiceImpl implements UserInfoService {
+public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoService {
 
-    @Resource
-    private JdbcTemplate jdbcTemplate;
+    private static final String FIELDS = "id,name,username,password,salt,state";
 
     @Override
     public Map<String, Object> findByUsername(String username) {
         if (StringUtils.isBlank(username)) return Common.EMPTY_MAP;
-        String sql = "select id,name,username,password,salt,state FROM user_info WHERE username = ? LIMIT 1";
+        String sql = "select "+FIELDS+" FROM user_info WHERE username = ? LIMIT 1";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, username);
         if (CollectionUtils.isEmpty(maps)) return Common.EMPTY_MAP;
         return maps.get(0);
+    }
+
+    /**
+     * 通过id查找用户信息
+     *
+     * @param id
+     */
+    @Override
+    public Map<String, Object> findById(final Integer id) {
+        return baseDao.findById(Tables.USER_INFO,id,"id,username");
     }
 
     /**

@@ -10,5 +10,6 @@ public class Tables {
     public static final String SYS_PERMISSION = "sys_permission";
     public static final String SYS_ROLE = "sys_role";
     public static final String SYS_ROLE_PERMISSION = "sys_role_permission";
+    public static final String USER_INFO = "user_info";
 
 }

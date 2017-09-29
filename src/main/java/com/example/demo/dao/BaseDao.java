@@ -66,6 +66,16 @@ public interface BaseDao {
      * @param condition order by , having, group by , limit 条件
      * @return
      */
+    Map<String, Object> findOne(String table, String fields, QueryCondition condition);
+
+    /**
+     * 根据条件查询
+     *
+     * @param table     表
+     * @param fields    查询字段
+     * @param condition order by , having, group by , limit 条件
+     * @return
+     */
     <T> List<T> find(String table, String fields, QueryCondition condition, Class<T> clazz);
 
     /**

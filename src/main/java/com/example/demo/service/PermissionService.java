@@ -5,7 +5,7 @@ import com.example.demo.entity.common.Page;
 import java.util.List;
 import java.util.Map;
 
-public interface PermissionService {
+public interface PermissionService extends BaseService {
 
     /**
      * 查询所有的权限

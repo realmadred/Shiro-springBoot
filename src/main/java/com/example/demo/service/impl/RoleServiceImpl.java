@@ -1,10 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.service.RoleService;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -14,10 +12,7 @@ import java.util.Map;
  * @description 描述
  */
 @Service
-public class RoleServiceImpl implements RoleService {
-
-    @Resource
-    private JdbcTemplate jdbcTemplate;
+public class RoleServiceImpl extends BaseServiceImpl  implements RoleService {
 
     /**
      * 通过角色id查找用户信息
