@@ -2,6 +2,7 @@ package com.example.demo.config.redis;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.example.demo.serializer.kryo.KryoRedisSerializer;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -30,6 +31,7 @@ public class RedisConfig extends CachingConfigurerSupport {
             sb.append(target.getClass().getSimpleName());
             sb.append(method.getName());
             int hashCode = 31;
+            if (ArrayUtils.isEmpty(params)) return sb.toString();
             for (Object obj : params) {
                 hashCode ^= obj == null ? 0 : obj.hashCode();
             }
