@@ -31,7 +31,7 @@ public class RedisConfig extends CachingConfigurerSupport {
             sb.append(method.getName());
             int hashCode = 31;
             for (Object obj : params) {
-                hashCode ^= obj.hashCode();
+                hashCode ^= obj == null ? 0 : obj.hashCode();
             }
             sb.append(hashCode);
             return sb.toString();
@@ -39,8 +39,8 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public RedisTemplate<Object,Object> redisTemplate() {
-        RedisTemplate<Object,Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<Object, Object> redisTemplate() {
+        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
         RedisSerializer<Object> kryoRedisSerializer = new KryoRedisSerializer<>();
         RedisSerializer keySerializer = new StringRedisSerializer();
