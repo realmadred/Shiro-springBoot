@@ -16,6 +16,9 @@ import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +36,7 @@ import static com.example.demo.util.Constant.ANON_CHAIN;
  * @description 权限服务
  */
 @Service("permissionService")
+@CacheConfig(cacheNames = "permission",cacheManager = "cacheManager",keyGenerator = "keyGenerator")
 public class PermissionServiceImpl extends BaseServiceImpl implements PermissionService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionServiceImpl.class);
@@ -46,6 +50,7 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
      * 查询所有的权限
      */
     @Override
+    @Cacheable
     public List<Map<String, Object>> findAll() {
         String sql = "SELECT " + FIELDS +
                 " FROM sys_permission WHERE available = 'true'";
@@ -58,6 +63,7 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
      * @param page
      */
     @Override
+    @Cacheable
     public List<Map<String, Object>> findByPage(final Page page) {
         if (page == null) return null;
         return baseDao.find(Tables.SYS_PERMISSION, FIELDS,
@@ -72,6 +78,7 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public int addPermission(final Map<String, Object> perm) {
         String permission = Common.getMapString(perm, "permission");
         if (StringUtils.isBlank(permission)) return 0;
@@ -110,6 +117,7 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
      * @param perm 权限表达式
      */
     @Override
+    @CacheEvict(allEntries = true)
     public void delPermission(final Map<String, Object> perm) {
         final int i = baseDao.delete(Tables.SYS_PERMISSION, Condition.create().addEqConditions(perm));
         if (i > 0) {
@@ -123,6 +131,7 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
      * @param id 权限id
      */
     @Override
+    @CacheEvict(allEntries = true)
     public int delPermissionById(final Integer id) {
         final int i = baseDao.deleteById(Tables.SYS_PERMISSION, id);
         if (i > 0) {
@@ -137,6 +146,7 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
      * @param perm 权限表达式
      */
     @Override
+    @CacheEvict(allEntries = true)
     public void updatePermissionById(final Map<String, Object> perm) {
         final int i = baseDao.updateById(Tables.SYS_PERMISSION, perm);
         if (i > 0) reloadPermissions();
@@ -148,6 +158,7 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
      * @param perms 权限表达式
      */
     @Override
+    @CacheEvict(allEntries = true)
     public void addPermissions(final List<Map<String, Object>> perms) {
         if (CollectionUtils.isEmpty(perms)) return;
         perms.forEach(map -> baseDao.add(Tables.SYS_PERMISSION, map));
@@ -160,6 +171,7 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
      * @param perms 权限表达式
      */
     @Override
+    @CacheEvict(allEntries = true)
     public void delPermissions(final List<Map<String, Object>> perms) {
         if (CollectionUtils.isEmpty(perms)) return;
         perms.forEach(map -> baseDao.delete(Tables.SYS_PERMISSION, Condition.create().addEqConditions(map)));
@@ -172,6 +184,7 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
      * @param ids 权限id集合
      */
     @Override
+    @CacheEvict(allEntries = true)
     public void delPermissionsByIds(final Object[] ids) {
         baseDao.deleteByIds(Tables.SYS_PERMISSION, ids);
         reloadPermissions();

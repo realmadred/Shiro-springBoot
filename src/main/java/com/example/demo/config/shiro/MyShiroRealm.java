@@ -65,13 +65,17 @@ public class MyShiroRealm extends AuthorizingRealm {
         if(CollectionUtils.isEmpty(userInfo)){
             return null;
         }
-        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
+        return  new SimpleAuthenticationInfo(
                 Common.getMapInteger(userInfo,"id"), //用户名
                 Common.getMapString(userInfo,"password"), //密码
                 ByteSource.Util.bytes(username+"@"+Common.getMapString(userInfo,"salt")),//salt=username@salt
                 getName()  //realm name
         );
-        return authenticationInfo;
+    }
+
+    @Override
+    protected Object getAuthorizationCacheKey(PrincipalCollection principals) {
+        return Constant.PRINCIPAL_PREFIX+Common.toString(principals.getPrimaryPrincipal());
     }
 
     /**

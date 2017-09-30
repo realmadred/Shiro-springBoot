@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.service.RoleService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class RoleServiceImpl extends BaseServiceImpl  implements RoleService {
      * @param id
      */
     @Override
+    @Cacheable(value = "role",keyGenerator = "keyGenerator")
     public List<Map<String, Object>> findPermissionsById(final Integer id) {
         String sql = "select p.id,p.available,p.name,p.parent_id,p.permission,p.resource_type,p.url" +
                 " FROM sys_role_permission rp " +

@@ -8,6 +8,8 @@ import org.apache.shiro.session.mgt.SimpleSession;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
+import java.util.Arrays;
+
 
 /**
  * lf
@@ -20,6 +22,7 @@ public class KryoRedisSerializer<T> implements RedisSerializer<T> {
 
     @Override
     public byte[] serialize(T t) throws SerializationException {
+        if (t == null) return ArrayUtils.EMPTY_BYTE_ARRAY;
         Output output = new Output(4096);
         Kryo kryo = DEFAULT_FACTORY.getKryo();
         try {

@@ -37,6 +37,9 @@ public class Constant {
     public static final String LOGOUT_CHAIN = "logout";
     public static final String ROLE_ADMIN = "admin";
 
+    // 权限key前缀
+    public static final String PRINCIPAL_PREFIX = "principal_prefix-";
+
     /**默认字符集*/
     public static final String UTF_8 = "UTF-8";
 
