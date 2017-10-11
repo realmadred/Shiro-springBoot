@@ -146,6 +146,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<fork>true</fork>
+					<executable>true</executable>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>

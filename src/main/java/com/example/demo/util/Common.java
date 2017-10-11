@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ConcurrentReferenceHashMap;
-import sun.reflect.misc.MethodUtil;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
@@ -337,7 +336,7 @@ public class Common {
 			return methods;
 		} else {
 			LOGGER.info("--------------reflect------------------");
-			methods = MethodUtil.getPublicMethods(clazz);
+			methods = clazz.getDeclaredMethods();
 			METHOD_CACHE.put(name, methods);
 			return methods;
 		}
