@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.common.Page;
 import com.example.demo.entity.jdbc.Condition;
 import com.example.demo.entity.jdbc.QueryCondition;
+import com.example.demo.properties.ShiroProperties;
 import com.example.demo.service.PermissionService;
 import com.example.demo.util.Common;
 import com.example.demo.util.Constant;
@@ -16,6 +17,7 @@ import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -43,6 +45,9 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
 
     @Resource
     private ShiroFilterFactoryBean filterFactoryBean;
+
+    @Autowired
+    private ShiroProperties properties;
 
     private static final String FIELDS = "id,name,parent_id,permission,url";
 
@@ -203,7 +208,7 @@ public class PermissionServiceImpl extends BaseServiceImpl implements Permission
                 //清空拦截管理器中的存储
                 filterManager.getFilterChains().clear();
                 // 配置不会被拦截的链接 顺序判断
-                Scanner scanner = new Scanner(Constant.SHIRO_NOT_CHAIN);
+                Scanner scanner = new Scanner(properties.getChain());
                 scanner.useDelimiter(",");
                 while (scanner.hasNext()) {
                     filterManager.createChain(scanner.next(), ANON_CHAIN);
