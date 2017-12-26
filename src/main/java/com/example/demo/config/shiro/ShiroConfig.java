@@ -6,6 +6,7 @@ import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.mgt.SessionFactory;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator;
@@ -33,8 +34,8 @@ public class ShiroConfig {
     }
 
     @Bean
-    public MyShiroRealm myShiroRealm() {
-        final MyShiroRealm myShiroRealm = new MyShiroRealm();
+    public AuthorizingRealm myShiroRealm() {
+        final AuthorizingRealm myShiroRealm = new MyShiroRealm();
         myShiroRealm.setCredentialsMatcher(getMatcher());
         return myShiroRealm;
     }
